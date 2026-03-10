@@ -65,11 +65,13 @@ pub fn run() {
         });
 }
 
-/// Poll port 8000 until the backend is ready or 30 seconds have elapsed.
+/// Poll port 8000 until the backend is ready or the timeout elapses.
 fn wait_for_backend() {
     use std::net::{TcpStream, ToSocketAddrs};
     use std::time::Duration;
     use std::thread;
+
+    const BACKEND_STARTUP_TIMEOUT_SECS: u32 = 30;
 
     let addr = "127.0.0.1:8000"
         .to_socket_addrs()
@@ -77,12 +79,12 @@ fn wait_for_backend() {
         .next()
         .unwrap();
 
-    for _ in 0..30 {
+    for _ in 0..BACKEND_STARTUP_TIMEOUT_SECS {
         if TcpStream::connect_timeout(&addr, Duration::from_secs(1)).is_ok() {
             return;
         }
         thread::sleep(Duration::from_secs(1));
     }
 
-    eprintln!("Warning: backend did not become ready within 30 seconds");
+    eprintln!("Warning: backend did not become ready within {BACKEND_STARTUP_TIMEOUT_SECS} seconds");
 }
