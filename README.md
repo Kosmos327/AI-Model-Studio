@@ -227,6 +227,76 @@ Full interactive API documentation is available at http://localhost:8000/docs wh
 
 ---
 
+## Desktop Version
+
+AI Model Studio can be packaged as a native desktop application using **Tauri** (Rust shell) and **PyInstaller** (Python backend binary).
+
+When the desktop app launches, it automatically starts the FastAPI backend as a sidecar process, waits for it to be ready, then opens the UI — no terminal required.
+
+Data is stored in the OS user-data directory:
+
+| OS | Location |
+|----|----------|
+| Windows | `%APPDATA%\com.aimodelstudio.app\` |
+| macOS | `~/Library/Application Support/com.aimodelstudio.app/` |
+| Linux | `~/.local/share/com.aimodelstudio.app/` |
+
+```
+com.aimodelstudio.app/
+├── studio.db       # SQLite database
+└── storage/        # Uploaded & generated files
+```
+
+### Prerequisites (desktop build)
+
+- Python 3.10+ with `pyinstaller` (`pip install pyinstaller`)
+- Rust + Cargo ([rustup.rs](https://rustup.rs))
+- Node.js 18+ and npm
+- Tauri CLI: installed automatically via `npm install` in the repo root
+
+### Build steps
+
+```bash
+# 1. Install root devDependencies (includes Tauri CLI)
+npm install
+
+# 2. Build the FastAPI backend into a standalone binary
+#    Output: src-tauri/binaries/backend-<target-triple>[.exe]
+npm run build:backend
+
+# 3. Build the Next.js frontend as static files
+#    Output: frontend/out/
+npm run build:frontend
+
+# 4. Bundle the Tauri desktop installer
+#    Output: src-tauri/target/release/bundle/
+npm run build:desktop
+```
+
+The `build:desktop` command also accepts `tauri build` directly if you have the Tauri CLI installed globally.
+
+### One-shot build
+
+```bash
+npm run build:backend && npm run build:desktop
+```
+
+### Development mode
+
+Run backend and frontend in development mode (no Tauri required):
+
+```bash
+# Terminal 1 – FastAPI backend
+npm run dev:backend
+# or: cd backend && uvicorn app.main:app --reload --port 8000
+
+# Terminal 2 – Next.js frontend (hot-reload)
+npm run dev:frontend
+# or: cd frontend && npm run dev
+```
+
+---
+
 ## Roadmap
 
 Future versions will add:

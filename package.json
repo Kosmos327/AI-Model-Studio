@@ -1,0 +1,16 @@
+{
+  "name": "ai-model-studio-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && uvicorn app.main:app --reload --port 8000",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build:backend": "node scripts/build-backend.js",
+    "build:frontend": "cd frontend && npm run build",
+    "build:desktop": "npm run build:frontend && tauri build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}

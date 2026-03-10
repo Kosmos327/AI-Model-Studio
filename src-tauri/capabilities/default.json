@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.tauri.app/core/schema/acl/capability/v1.json",
+  "identifier": "default",
+  "description": "Default capabilities for AI Model Studio",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "backend",
+          "sidecar": true
+        }
+      ]
+    },
+    "shell:allow-kill"
+  ]
+}
