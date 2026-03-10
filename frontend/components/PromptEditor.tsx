@@ -72,12 +72,12 @@ export default function PromptEditor({ initial, characters, onSubmit, onCancel }
         <div className="space-y-1.5">
           <Label>Character</Label>
           <Select
-            value={form.character_id ? String(form.character_id) : ""}
-            onValueChange={(v) => setForm((f) => ({ ...f, character_id: v ? Number(v) : undefined }))}
+            value={form.character_id ? String(form.character_id) : "none"}
+            onValueChange={(v) => setForm((f) => ({ ...f, character_id: v !== "none" ? Number(v) : undefined }))}
           >
             <SelectTrigger><SelectValue placeholder="Generic (no character)" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Generic</SelectItem>
+              <SelectItem value="none">Generic</SelectItem>
               {characters.map((c) => (
                 <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
               ))}

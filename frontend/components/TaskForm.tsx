@@ -77,12 +77,12 @@ export default function TaskForm({ initial, characters, prompts, onSubmit, onCan
         <div className="space-y-1.5">
           <Label>Character</Label>
           <Select
-            value={form.character_id ? String(form.character_id) : ""}
-            onValueChange={(v) => setForm((f) => ({ ...f, character_id: v ? Number(v) : undefined }))}
+            value={form.character_id ? String(form.character_id) : "none"}
+            onValueChange={(v) => setForm((f) => ({ ...f, character_id: v !== "none" ? Number(v) : undefined }))}
           >
             <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
+              <SelectItem value="none">None</SelectItem>
               {characters.map((c) => (
                 <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
               ))}
@@ -139,12 +139,12 @@ export default function TaskForm({ initial, characters, prompts, onSubmit, onCan
       <div className="space-y-1.5">
         <Label>Prompt Template</Label>
         <Select
-          value={form.prompt_template_id ? String(form.prompt_template_id) : ""}
-          onValueChange={(v) => setForm((f) => ({ ...f, prompt_template_id: v ? Number(v) : undefined }))}
+          value={form.prompt_template_id ? String(form.prompt_template_id) : "none"}
+          onValueChange={(v) => setForm((f) => ({ ...f, prompt_template_id: v !== "none" ? Number(v) : undefined }))}
         >
           <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">None</SelectItem>
+            <SelectItem value="none">None</SelectItem>
             {prompts.map((p) => (
               <SelectItem key={p.id} value={String(p.id)}>{p.title}</SelectItem>
             ))}

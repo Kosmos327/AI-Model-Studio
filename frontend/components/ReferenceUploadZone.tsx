@@ -24,7 +24,7 @@ export default function ReferenceUploadZone({ characters, onUploaded }: Referenc
   const [dragging, setDragging] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [characterId, setCharacterId] = useState("");
+  const [characterId, setCharacterId] = useState("none");
   const [category, setCategory] = useState("face");
   const [isMaster, setIsMaster] = useState(false);
   const [notes, setNotes] = useState("");
@@ -56,7 +56,7 @@ export default function ReferenceUploadZone({ characters, onUploaded }: Referenc
     try {
       const fd = new FormData();
       fd.append("file", file);
-      if (characterId) fd.append("character_id", characterId);
+      if (characterId && characterId !== "none") fd.append("character_id", characterId);
       fd.append("category", category);
       fd.append("is_master", String(isMaster));
       if (notes) fd.append("notes", notes);
@@ -65,6 +65,7 @@ export default function ReferenceUploadZone({ characters, onUploaded }: Referenc
       setFile(null);
       setPreview(null);
       setNotes("");
+      setCharacterId("none");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
@@ -123,7 +124,7 @@ export default function ReferenceUploadZone({ characters, onUploaded }: Referenc
               <Select value={characterId} onValueChange={setCharacterId}>
                 <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="none">None</SelectItem>
                   {characters.map((c) => (
                     <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
                   ))}

@@ -17,10 +17,10 @@ export default function ReferencesPage() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
   const [showUpload, setShowUpload] = useState(false);
-  const [charFilter, setCharFilter] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [masterFilter, setMasterFilter] = useState("");
+  const [charFilter, setCharFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [masterFilter, setMasterFilter] = useState("all");
 
   const fetchData = async () => {
     setLoading(true);
@@ -28,9 +28,9 @@ export default function ReferencesPage() {
       const [refs, chars] = await Promise.all([
         getReferences({
           size: 200,
-          character_id: charFilter ? Number(charFilter) : undefined,
-          asset_type: typeFilter || undefined,
-          category: categoryFilter || undefined,
+          character_id: charFilter !== "all" ? Number(charFilter) : undefined,
+          asset_type: typeFilter !== "all" ? typeFilter : undefined,
+          category: categoryFilter !== "all" ? categoryFilter : undefined,
           is_master: masterFilter === "true" ? true : masterFilter === "false" ? false : undefined,
         }),
         getCharacters({ size: 100 }),
@@ -69,14 +69,14 @@ export default function ReferencesPage() {
         <Select value={charFilter} onValueChange={setCharFilter}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All characters" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All characters</SelectItem>
+            <SelectItem value="all">All characters</SelectItem>
             {characters.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All types" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All types</SelectItem>
+            <SelectItem value="all">All types</SelectItem>
             <SelectItem value="image">Image</SelectItem>
             <SelectItem value="video">Video</SelectItem>
           </SelectContent>
@@ -84,7 +84,7 @@ export default function ReferencesPage() {
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All categories" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All categories</SelectItem>
+            <SelectItem value="all">All categories</SelectItem>
             {["face","body","outfit","background","style","other"].map((c) => (
               <SelectItem key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</SelectItem>
             ))}
@@ -93,7 +93,7 @@ export default function ReferencesPage() {
         <Select value={masterFilter} onValueChange={setMasterFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All refs" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All refs</SelectItem>
+            <SelectItem value="all">All refs</SelectItem>
             <SelectItem value="true">Masters only</SelectItem>
             <SelectItem value="false">Non-masters</SelectItem>
           </SelectContent>
