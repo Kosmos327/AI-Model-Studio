@@ -33,7 +33,7 @@ pub fn run() {
             );
 
             // Spawn the backend sidecar with the correct data paths.
-            let (_rx, child) = app
+            let (rx, child) = app
                 .shell()
                 .sidecar("backend")
                 .expect("backend sidecar not found – run `npm run build:backend` first")
@@ -43,10 +43,20 @@ pub fn run() {
                 .spawn()
                 .expect("Failed to spawn backend process");
 
+            // Drain backend stdout/stderr in an async task so the OS pipe buffers
+            // never fill up and block the backend process.
+            tauri::async_runtime::spawn(async move {
+                let mut rx = rx;
+                while rx.recv().await.is_some() {}
+            });
+
             *app.state::<BackendProcess>().0.lock().unwrap() = Some(child);
 
-            // Block until FastAPI is accepting connections (up to 30 s).
-            wait_for_backend();
+            // Wait for FastAPI in a background thread so the Tauri setup
+            // (and therefore the window) is not blocked.
+            std::thread::spawn(|| {
+                wait_for_backend();
+            });
 
             Ok(())
         })

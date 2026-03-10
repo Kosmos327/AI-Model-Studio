@@ -43,7 +43,7 @@ const targetTriple = getTargetTriple();
 mkdirSync(binariesDir, { recursive: true });
 
 console.log("Building backend with PyInstaller…");
-execSync("pyinstaller backend.spec --clean", {
+execSync("python -m PyInstaller backend.spec --clean", {
   cwd: backendDir,
   stdio: "inherit",
 });
