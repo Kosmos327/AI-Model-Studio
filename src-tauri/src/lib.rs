@@ -65,11 +65,14 @@ pub fn run() {
         .run(|app_handle, event| {
             // Kill the backend when the last window is destroyed or the app exits.
             if let RunEvent::ExitRequested { .. } = event {
-                let state = app_handle.state::<BackendProcess>();
-                if let Ok(mut guard) = state.0.lock() {
-                    if let Some(mut child) = guard.take() {
-                        let _ = child.kill();
-                    }
+                let child = app_handle
+                    .state::<BackendProcess>()
+                    .0
+                    .lock()
+                    .ok()
+                    .and_then(|mut g| g.take());
+                if let Some(mut child) = child {
+                    let _ = child.kill();
                 }
             }
         });
