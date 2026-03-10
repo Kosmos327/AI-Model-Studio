@@ -29,7 +29,7 @@ pub fn run() {
             // Build a portable SQLite URL (forward slashes work on all platforms).
             let db_url = format!(
                 "sqlite:///{}",
-                db_path.to_string_lossy().replace('\\', '/')
+                db_path.to_string_lossy().replace('\\', "/")
             );
 
             // Spawn the backend sidecar with the correct data paths.
