@@ -8,7 +8,9 @@
     "build:backend": "node scripts/build-backend.js",
     "build:frontend": "cd frontend && npm run build",
     "build:desktop": "npm run build:frontend && tauri build",
-    "tauri": "tauri"
+    "generate:icons": "python scripts/generate-icons.py",
+    "tauri": "tauri",
+    "tauri:dev": "npm run build:backend && npm run build:frontend && tauri dev"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0"
