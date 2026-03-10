@@ -23,15 +23,15 @@ export default function PlannerPage() {
   const [view, setView] = useState<"list" | "calendar">("list");
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<ContentPlanItem | null>(null);
-  const [charFilter, setCharFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [charFilter, setCharFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const [plan, chars] = await Promise.all([
-        getPlanItems({ size: 200, character_id: charFilter ? Number(charFilter) : undefined, status: statusFilter || undefined }),
+        getPlanItems({ size: 200, character_id: charFilter !== "all" ? Number(charFilter) : undefined, status: statusFilter !== "all" ? statusFilter : undefined }),
         getCharacters({ size: 100 }),
       ]);
       setItems(plan.items);
@@ -89,14 +89,14 @@ export default function PlannerPage() {
         <Select value={charFilter} onValueChange={setCharFilter}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All characters" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All characters</SelectItem>
+            <SelectItem value="all">All characters</SelectItem>
             {characters.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All statuses" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All statuses</SelectItem>
+            <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="planned">Planned</SelectItem>
             <SelectItem value="draft">Draft</SelectItem>
             <SelectItem value="ready">Ready</SelectItem>
@@ -260,10 +260,10 @@ function PlanItemForm({ initial, characters, onSubmit, onCancel }: {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label>Character</Label>
-          <Select value={form.character_id ? String(form.character_id) : ""} onValueChange={(v) => setForm((f) => ({ ...f, character_id: v ? Number(v) : undefined }))}>
+          <Select value={form.character_id ? String(form.character_id) : "none"} onValueChange={(v) => setForm((f) => ({ ...f, character_id: v !== "none" ? Number(v) : undefined }))}>
             <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
+              <SelectItem value="none">None</SelectItem>
               {characters.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
             </SelectContent>
           </Select>

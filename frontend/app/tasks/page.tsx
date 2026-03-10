@@ -18,9 +18,9 @@ export default function TasksPage() {
   const [prompts, setPrompts] = useState<PromptTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [charFilter, setCharFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [engineFilter, setEngineFilter] = useState("");
+  const [charFilter, setCharFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [engineFilter, setEngineFilter] = useState("all");
 
   const fetchData = async () => {
     setLoading(true);
@@ -28,9 +28,9 @@ export default function TasksPage() {
       const [tsks, chars, proms] = await Promise.all([
         getTasks({
           size: 200,
-          character_id: charFilter ? Number(charFilter) : undefined,
-          status: statusFilter || undefined,
-          engine: engineFilter || undefined,
+          character_id: charFilter !== "all" ? Number(charFilter) : undefined,
+          status: statusFilter !== "all" ? statusFilter : undefined,
+          engine: engineFilter !== "all" ? engineFilter : undefined,
         }),
         getCharacters({ size: 100 }),
         getPrompts({ size: 200 }),
@@ -79,14 +79,14 @@ export default function TasksPage() {
         <Select value={charFilter} onValueChange={setCharFilter}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All characters" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All characters</SelectItem>
+            <SelectItem value="all">All characters</SelectItem>
             {characters.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All statuses" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All statuses</SelectItem>
+            <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="queued">Queued</SelectItem>
             <SelectItem value="running">Running</SelectItem>
             <SelectItem value="done">Done</SelectItem>
@@ -97,7 +97,7 @@ export default function TasksPage() {
         <Select value={engineFilter} onValueChange={setEngineFilter}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All engines" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All engines</SelectItem>
+            <SelectItem value="all">All engines</SelectItem>
             <SelectItem value="midjourney">Midjourney</SelectItem>
             <SelectItem value="dalle">DALL·E</SelectItem>
             <SelectItem value="stable_diffusion">Stable Diffusion</SelectItem>

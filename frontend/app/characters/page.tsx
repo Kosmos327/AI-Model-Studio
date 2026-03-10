@@ -18,13 +18,13 @@ export default function CharactersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const [showCreate, setShowCreate] = useState(false);
 
   const fetchCharacters = async () => {
     setLoading(true);
     try {
-      const res = await getCharacters({ size: 100, status: statusFilter || undefined, search: search || undefined });
+      const res = await getCharacters({ size: 100, status: statusFilter !== "all" ? statusFilter : undefined, search: search || undefined });
       setCharacters(res.items);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load");
@@ -72,7 +72,7 @@ export default function CharactersPage() {
             <SelectValue placeholder="All statuses" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All statuses</SelectItem>
+            <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="draft">Draft</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="archived">Archived</SelectItem>

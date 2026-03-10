@@ -24,9 +24,9 @@ export default function PromptsPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<PromptTemplate | null>(null);
-  const [charFilter, setCharFilter] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [favFilter, setFavFilter] = useState("");
+  const [charFilter, setCharFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [favFilter, setFavFilter] = useState("all");
 
   const fetchData = async () => {
     setLoading(true);
@@ -34,8 +34,8 @@ export default function PromptsPage() {
       const [proms, chars] = await Promise.all([
         getPrompts({
           size: 200,
-          character_id: charFilter ? Number(charFilter) : undefined,
-          prompt_type: typeFilter || undefined,
+          character_id: charFilter !== "all" ? Number(charFilter) : undefined,
+          prompt_type: typeFilter !== "all" ? typeFilter : undefined,
           is_favorite: favFilter === "true" ? true : undefined,
         }),
         getCharacters({ size: 100 }),
@@ -87,14 +87,14 @@ export default function PromptsPage() {
         <Select value={charFilter} onValueChange={setCharFilter}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All characters" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All characters</SelectItem>
+            <SelectItem value="all">All characters</SelectItem>
             {characters.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All types" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All types</SelectItem>
+            <SelectItem value="all">All types</SelectItem>
             <SelectItem value="photo">Photo</SelectItem>
             <SelectItem value="reel">Reel</SelectItem>
             <SelectItem value="caption">Caption</SelectItem>
@@ -104,7 +104,7 @@ export default function PromptsPage() {
         <Select value={favFilter} onValueChange={setFavFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All prompts" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All prompts</SelectItem>
+            <SelectItem value="all">All prompts</SelectItem>
             <SelectItem value="true">Favorites only</SelectItem>
           </SelectContent>
         </Select>

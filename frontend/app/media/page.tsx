@@ -18,10 +18,10 @@ export default function MediaPage() {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<MediaAsset | null>(null);
-  const [charFilter, setCharFilter] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [bestFilter, setBestFilter] = useState("");
+  const [charFilter, setCharFilter] = useState("all");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [bestFilter, setBestFilter] = useState("all");
   const [uploading, setUploading] = useState(false);
 
   const fetchData = async () => {
@@ -30,9 +30,9 @@ export default function MediaPage() {
       const [med, chars] = await Promise.all([
         getMediaAssets({
           size: 200,
-          character_id: charFilter ? Number(charFilter) : undefined,
-          asset_type: typeFilter || undefined,
-          publish_status: statusFilter || undefined,
+          character_id: charFilter !== "all" ? Number(charFilter) : undefined,
+          asset_type: typeFilter !== "all" ? typeFilter : undefined,
+          publish_status: statusFilter !== "all" ? statusFilter : undefined,
           is_best: bestFilter === "true" ? true : bestFilter === "false" ? false : undefined,
         }),
         getCharacters({ size: 100 }),
@@ -104,14 +104,14 @@ export default function MediaPage() {
         <Select value={charFilter} onValueChange={setCharFilter}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All characters" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All characters</SelectItem>
+            <SelectItem value="all">All characters</SelectItem>
             {characters.map((c) => <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>)}
           </SelectContent>
         </Select>
         <Select value={typeFilter} onValueChange={setTypeFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All types" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All types</SelectItem>
+            <SelectItem value="all">All types</SelectItem>
             <SelectItem value="image">Image</SelectItem>
             <SelectItem value="video">Video</SelectItem>
           </SelectContent>
@@ -119,7 +119,7 @@ export default function MediaPage() {
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-40"><SelectValue placeholder="All statuses" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All statuses</SelectItem>
+            <SelectItem value="all">All statuses</SelectItem>
             <SelectItem value="draft">Draft</SelectItem>
             <SelectItem value="approved">Approved</SelectItem>
             <SelectItem value="ready">Ready</SelectItem>
@@ -130,7 +130,7 @@ export default function MediaPage() {
         <Select value={bestFilter} onValueChange={setBestFilter}>
           <SelectTrigger className="w-36"><SelectValue placeholder="All media" /></SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All media</SelectItem>
+            <SelectItem value="all">All media</SelectItem>
             <SelectItem value="true">Best only</SelectItem>
           </SelectContent>
         </Select>
