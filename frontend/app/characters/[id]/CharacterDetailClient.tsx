@@ -43,7 +43,7 @@ export default function CharacterDetailPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!id) return;
+    if (isNaN(id) || id <= 0) return;
     setLoading(true);
     Promise.all([
       getCharacter(id),
