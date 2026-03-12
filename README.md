@@ -10,7 +10,7 @@ This is **not** a neural network or video editor. It's an **operational hub for 
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 14 (App Router), TypeScript, Tailwind CSS, shadcn/ui |
+| Frontend | Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui |
 | Backend | FastAPI, SQLAlchemy, Pydantic v2, Alembic |
 | Database | SQLite |
 | File storage | Local filesystem (`backend/storage/`) |
@@ -33,9 +33,11 @@ AI-Model-Studio/
 │   │   └── utils/              # Helpers
 │   ├── alembic/                # Database migrations
 │   ├── storage/                # Uploaded files (gitignored)
+│   ├── backend.spec            # PyInstaller build spec
+│   ├── run_backend.py          # Packaged executable entry point
 │   ├── requirements.txt
 │   └── .env.example
-├── frontend/                   # Next.js frontend
+├── frontend/                   # Next.js frontend (static export)
 │   ├── app/                    # App Router pages
 │   │   ├── page.tsx            # Dashboard
 │   │   ├── characters/         # Characters list + detail
@@ -47,7 +49,19 @@ AI-Model-Studio/
 │   ├── components/             # Reusable React components
 │   ├── lib/                    # API client
 │   ├── types/                  # TypeScript types
+│   ├── next.config.mjs         # Next.js config (output: 'export')
 │   └── .env.example
+├── scripts/
+│   └── build-backend.js        # PyInstaller build + sidecar copy script
+├── src-tauri/                  # Tauri desktop wrapper (Rust)
+│   ├── src/
+│   │   ├── main.rs             # Rust entry point
+│   │   └── lib.rs              # Sidecar lifecycle management
+│   ├── binaries/               # Backend sidecar binary (gitignored)
+│   ├── capabilities/           # Tauri v2 permission declarations
+│   ├── Cargo.toml
+│   └── tauri.conf.json         # Tauri configuration
+├── package.json                # Root scripts (dev, build, tauri)
 └── README.md
 ```
 
